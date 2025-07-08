@@ -1,31 +1,25 @@
 package projects.todo;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import projects.todo.api.request.PaginationApiRequest;
-import projects.todo.api.request.TaskFilter;
-import projects.todo.persistance.Task;
-import projects.todo.persistance.TaskMatcher;
+import projects.todo.api.filter.TaskFilter;
+import projects.todo.api.TaskSummaryApiResponse;
+import projects.todo.converter.TaskConverter;
 import projects.todo.persistance.TaskRepository;
+import projects.todo.persistance.TaskSpecification;
+import projects.todo.shared.pagination.PageApiRequest;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final TaskConverter taskConverter;
 
+    public Page<TaskSummaryApiResponse> getTasksSummaries(PageApiRequest pageApiRequest, TaskFilter taskFilter) {
+        var specification = new TaskSpecification(taskFilter);
+        var page = pageApiRequest.toPageable();
 
-    public void getTasksSummaries(PaginationApiRequest paginationApiRequest, TaskFilter taskFilter) {
-
-
-        Specification<Task> spec = new TaskMatcher.Builder()
-                .withTitle(taskFilter.name())
-                .withCompleted(taskFilter.completed())
-                .build()
-                .asSpecification();
-
-        var taskPage = taskRepository.findAll(Specification.allOf(), paginationApiRequest.toPageable());
+        return taskRepository.findAll(specification, page).map(taskConverter::toTaskSummaryApiResponse);
     }
 }

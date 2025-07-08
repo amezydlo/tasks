@@ -1,7 +1,7 @@
-package projects.todo.api.response;
+package projects.todo.api;
 
 public record TaskSummaryApiResponse(
         String name,
-        Boolean isDone
+        Boolean completed
 ) {
 }

@@ -1,15 +1,18 @@
-package projects.todo.api.request;
+package projects.todo.shared.pagination;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
-public record PaginationApiRequest(
+/*
+*
+* Used in requests
+*
+* */
+public record PageApiRequest(
         Integer page,
         Integer size
 ) {
     public Pageable toPageable() {
-        // TODO add sorting
         return PageRequest.of(page, size);
     }
 }

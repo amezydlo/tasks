@@ -1,7 +1,7 @@
-package projects.todo.api.request;
+package projects.todo.api.filter;
 
 public record TaskFilter (
-        String name,
+        String title,
         Boolean completed
 ) {
 }
