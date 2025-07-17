@@ -2,18 +2,23 @@ package projects.todo;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.querydsl.QSort;
 import org.springframework.stereotype.Service;
 import projects.todo.api.TaskApiResponse;
 import projects.todo.api.TaskCreateApiRequest;
 import projects.todo.api.TaskSummaryApiResponse;
 import projects.todo.api.TaskUpdateApiRequest;
 import projects.todo.api.filter.TaskFilter;
+import projects.todo.api.sorting.TaskSortParams;
 import projects.todo.converter.TaskConverter;
 import projects.todo.exception.NotFoundException;
 import projects.todo.persistance.Task;
 import projects.todo.persistance.TaskRepository;
 import projects.todo.persistance.TaskSpecification;
 import projects.todo.shared.pagination.PageApiRequest;
+import projects.todo.shared.sorting.SortRequest;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +26,9 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskConverter taskConverter;
 
-    public Page<TaskSummaryApiResponse> getTasksSummaries(PageApiRequest pageApiRequest, TaskFilter taskFilter) {
+    public Page<TaskSummaryApiResponse> getTasksSummaries(PageApiRequest pageApiRequest, TaskFilter taskFilter, Optional<SortRequest<TaskSortParams>> sort) {
         var specification = new TaskSpecification(taskFilter);
-        var page = pageApiRequest.toPageable();
+        var page = pageApiRequest.toPageable(sort);
 
         return taskRepository.findAll(specification, page).map(taskConverter::toTaskSummaryApiResponse);
     }

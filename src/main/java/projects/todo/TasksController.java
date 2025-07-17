@@ -8,11 +8,14 @@ import projects.todo.api.TaskCreateApiRequest;
 import projects.todo.api.TaskSummaryApiResponse;
 import projects.todo.api.TaskUpdateApiRequest;
 import projects.todo.api.filter.TaskFilter;
+import projects.todo.api.sorting.TaskSortParams;
 import projects.todo.shared.pagination.Page;
 import projects.todo.shared.pagination.PageApiRequest;
 import projects.todo.shared.pagination.PageInfo;
+import projects.todo.shared.sorting.SortRequest;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(TasksController.BASE_URL)
@@ -26,9 +29,10 @@ public class TasksController {
     @GetMapping
     public Page<TaskSummaryApiResponse> getTaskSummaries(
             PageApiRequest pagination,
-            TaskFilter taskFilter
+            TaskFilter taskFilter,
+            @RequestParam Optional<SortRequest<TaskSortParams>> sortRequest
     ) {
-        var tasksSummariesPage = taskService.getTasksSummaries(pagination, taskFilter);
+        var tasksSummariesPage = taskService.getTasksSummaries(pagination, taskFilter, sortRequest);
         var pageInfo = new PageInfo(
                 tasksSummariesPage.getNumber(),
                 tasksSummariesPage.getSize(),
