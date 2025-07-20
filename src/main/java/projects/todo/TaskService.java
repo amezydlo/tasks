@@ -14,6 +14,7 @@ import projects.todo.api.sorting.TaskSortParams;
 import projects.todo.converter.TaskConverter;
 import projects.todo.exception.NotFoundException;
 import projects.todo.persistance.Task;
+import projects.todo.persistance.TaskListRepository;
 import projects.todo.persistance.TaskRepository;
 import projects.todo.persistance.TaskSpecification;
 
@@ -22,6 +23,7 @@ import projects.todo.persistance.TaskSpecification;
 public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskConverter taskConverter;
+    private final TaskListRepository taskListRepository;
 
     public Page<TaskSummaryApiResponse> getTasksSummaries(
             PageRequest pageRequest,
@@ -40,9 +42,17 @@ public class TaskService {
     }
 
     public TaskApiResponse createTask(TaskCreateApiRequest taskCreateRequest) {
+        var owningTaskLists = taskListRepository.findAllById(taskCreateRequest.owningLists());
+
+        if (owningTaskLists.size() != taskCreateRequest.owningLists().size()) {
+            throw new IllegalStateException("One or more of the provided lists does not exist");
+        }
+
         var createdTask = new Task(
                 taskCreateRequest.title(),
                 taskCreateRequest.description());
+        createdTask.setLists(owningTaskLists);
+
         return taskConverter.toTaskApiResponse(taskRepository.save(createdTask));
     }
 

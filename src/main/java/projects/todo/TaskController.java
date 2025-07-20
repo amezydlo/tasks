@@ -19,14 +19,14 @@ import projects.todo.api.sorting.TaskSortParams;
 
 import java.net.URI;
 
-import static projects.todo.TaskController.BASE_URL;
+import static projects.todo.TaskController.BASE_PATH;
 
 @RestController
-@RequestMapping(BASE_URL)
+@RequestMapping(BASE_PATH)
 @AllArgsConstructor
 public class TaskController {
 
-    public static final String BASE_URL = "/tasks";
+    public static final String BASE_PATH = "/tasks";
 
     private final TaskService taskService;
 
@@ -106,7 +106,7 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskApiResponse> createTask(@RequestBody TaskCreateApiRequest request) {
         var createdTask = taskService.createTask(request);
-        URI location = URI.create(BASE_URL + "/" + createdTask.id());
+        URI location = URI.create(BASE_PATH + "/" + createdTask.id());
         return ResponseEntity.created(location).body(createdTask);
     }
 

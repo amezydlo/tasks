@@ -5,10 +5,10 @@
 1. Tasks are grouped into lists
 2. `ListController` has the following endpoints:
    - `GET /lists` - get all lists
-   - `GET /lists/{id}` - get specific list by id
+   - <del>`GET /lists/{id}` - get specific list by id</del>
    - `GET /lists/{id}/tasks` - get all task summaries for given list
    - `POST /lists` - create a new list
-   - `PATCH /lists/{id}` - correct existing list specific params
+   - `PUT /lists/{id}/name` - rename existing list (for now there's nothing more to update)
    - `DELETE /lists/{id}` - delete specified list
 3. `TaskController` has the following endpoints:
    - `GET /tasks` - get all tasks summaries like name, date, status (query params for filtering sorting and pagination)
