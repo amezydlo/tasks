@@ -1,7 +1,11 @@
 package projects.todo.api.filter;
 
-public record TaskFilter (
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record TaskFilter(
+        @Schema(description = "Title of the task.")
         String title,
-        Boolean completed
+        @Schema(description = "Completion status of the task. Can be true or false")
+        boolean completed
 ) {
 }

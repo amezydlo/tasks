@@ -1,12 +1,10 @@
 package projects.todo.persistance;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @NoArgsConstructor
@@ -15,10 +13,17 @@ import lombok.Setter;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private long id;
+
+    @NotEmpty
+    @Column(nullable = false) // Default length is 255
     private String title;
+
+    @Size(max = 255)
     private String description;
-    private Boolean completed;
+
+    @ColumnDefault("false")
+    private boolean completed;
 
     public Task(String title, String description) {
         this.title = title;

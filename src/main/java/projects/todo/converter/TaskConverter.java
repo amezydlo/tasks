@@ -9,8 +9,9 @@ import projects.todo.persistance.Task;
 public class TaskConverter {
     public TaskSummaryApiResponse toTaskSummaryApiResponse(Task task) {
         return new TaskSummaryApiResponse(
+                task.getId(),
                 task.getTitle(),
-                task.getCompleted()
+                task.isCompleted()
         );
     }
 
@@ -19,7 +20,7 @@ public class TaskConverter {
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),
-                task.getCompleted()
+                task.isCompleted()
         );
     }
 
