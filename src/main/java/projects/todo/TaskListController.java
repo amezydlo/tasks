@@ -48,18 +48,4 @@ public class TaskListController {
         URI location = URI.create(BASE_PATH + "/" + createdList.id());
         return ResponseEntity.created(location).body(createdList);
     }
-
-    @Operation(
-            operationId = "delete-task-list",
-            summary = "Delete existing list.",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "List deleted successfully."),
-            }
-    )
-    @DeleteMapping("/{listId}")
-    public ResponseEntity<Void> deleteTaskList(@PathVariable Long listId) {
-        taskListService.removeList(listId);
-        return ResponseEntity.noContent().build();
-    }
-
 }

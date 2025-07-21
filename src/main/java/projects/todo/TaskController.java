@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import projects.todo.api.*;
 import projects.todo.api.filter.TaskFilter;
+import projects.todo.api.pagination.TaskPageResponse;
 import projects.todo.api.sorting.TaskSortParams;
 
 import java.net.URI;

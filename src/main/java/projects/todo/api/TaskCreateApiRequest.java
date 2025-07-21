@@ -3,7 +3,7 @@ package projects.todo.api;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 
-import java.util.List;
+import java.util.Set;
 
 @Schema(description = "Task creation request. Created task's completion status is set to false by default.")
 public record TaskCreateApiRequest(
@@ -11,6 +11,6 @@ public record TaskCreateApiRequest(
         String description,
 
         @NotEmpty
-        List<Long> owningLists
+        Set<Long> lists
 ) {
 }

@@ -3,21 +3,23 @@ package projects.todo.persistance;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(of = "id")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue // TODO change when ready for production
     private Long id;
 
     @NotEmpty
@@ -30,24 +32,26 @@ public class Task {
     @ColumnDefault("false")
     private boolean completed;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "task_task_list",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "list_id")
     )
-    private List<TaskList> lists = new ArrayList<>();
+    private Set<TaskList> lists = new HashSet<>();
 
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
     }
 
-    @PrePersist
-    @PreUpdate
-    private void ensureBelongsToList() {
-        if (lists.isEmpty()) {
-            throw new IllegalStateException("A task must belong to at least one list");
-        }
+    public void addList(TaskList list) {
+        lists.add(list);
+        list.getTasks().add(this);
+    }
+
+    public void removeList(TaskList list) {
+        lists.remove(list);
+        list.getTasks().remove(this);
     }
 }
