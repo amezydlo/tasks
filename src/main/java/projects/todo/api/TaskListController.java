@@ -1,18 +1,19 @@
-package projects.todo;
+package projects.todo.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import projects.todo.api.TaskListCreateApiRequest;
-import projects.todo.api.TaskListCreateApiResponse;
-import projects.todo.api.TaskListSummary;
+import projects.todo.TaskListService;
+import projects.todo.api.model.TaskListCreateApiRequest;
+import projects.todo.api.model.TaskListCreateApiResponse;
+import projects.todo.api.model.TaskListSummary;
 
 import java.net.URI;
 import java.util.List;
 
-import static projects.todo.TaskListController.BASE_PATH;
+import static projects.todo.api.TaskListController.BASE_PATH;
 
 @RestController
 @RequestMapping(BASE_PATH)

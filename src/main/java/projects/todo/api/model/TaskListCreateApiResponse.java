@@ -1,4 +1,4 @@
-package projects.todo.api;
+package projects.todo.api.model;
 
 public record TaskListCreateApiResponse(
         Long id,

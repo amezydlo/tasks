@@ -1,8 +1,8 @@
 package projects.todo.converter;
 
 import org.springframework.stereotype.Component;
-import projects.todo.api.TaskListCreateApiResponse;
-import projects.todo.api.TaskListSummary;
+import projects.todo.api.model.TaskListCreateApiResponse;
+import projects.todo.api.model.TaskListSummary;
 import projects.todo.persistance.TaskList;
 
 @Component

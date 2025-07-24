@@ -1,4 +1,4 @@
-package projects.todo;
+package projects.todo.api;
 
 import api.common.pagination.Page;
 import api.common.pagination.PageInfo;
@@ -13,14 +13,18 @@ import lombok.AllArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import projects.todo.api.*;
+import projects.todo.TaskService;
 import projects.todo.api.filter.TaskFilter;
+import projects.todo.api.model.TaskApiResponse;
+import projects.todo.api.model.TaskCreateApiRequest;
+import projects.todo.api.model.TaskSummaryApiResponse;
+import projects.todo.api.model.TaskUpdateApiRequest;
 import projects.todo.api.pagination.TaskPageResponse;
 import projects.todo.api.sorting.TaskSortParams;
 
 import java.net.URI;
 
-import static projects.todo.TaskController.BASE_PATH;
+import static projects.todo.api.TaskController.BASE_PATH;
 
 @RestController
 @RequestMapping(BASE_PATH)
