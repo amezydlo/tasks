@@ -48,4 +48,29 @@ public class TaskListController {
         URI location = URI.create(BASE_PATH + "/" + createdList.id());
         return ResponseEntity.created(location).body(createdList);
     }
+
+    @Operation(
+            operationId = "update-task-list",
+            summary = "Update existing list metadata.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Task list successfully updated.")
+            }
+    )
+    @PutMapping("/{taskListId}")
+    public ResponseEntity<TaskListCreateApiResponse> updateTaskList(@PathVariable Long taskListId, @RequestBody TaskListCreateApiRequest request) {
+        return ResponseEntity.ok(taskListService.updateTaskList(taskListId, request));
+    }
+
+    @Operation(
+            operationId = "delete-task-list",
+            summary = "Delete existing list metadata.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Task list successfully deleted.")
+            }
+    )
+    @DeleteMapping("/{taskListId}")
+    public ResponseEntity<Void> deleteTaskList(@PathVariable Long taskListId, @RequestParam(required = false) boolean force) {
+        taskListService.deleteTaskList(taskListId, force);
+        return ResponseEntity.noContent().build();
+    }
 }

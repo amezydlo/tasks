@@ -7,10 +7,14 @@ import projects.todo.api.TaskListCreateApiRequest;
 import projects.todo.api.TaskListCreateApiResponse;
 import projects.todo.api.TaskListSummary;
 import projects.todo.converter.TaskListConverter;
+import projects.todo.exception.NotFoundException;
+import projects.todo.exception.OrphanedTasksException;
+import projects.todo.persistance.Task;
 import projects.todo.persistance.TaskList;
 import projects.todo.persistance.TaskListRepository;
 import projects.todo.persistance.TaskRepository;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -32,4 +36,33 @@ public class TaskListService {
         return taskListConverter.toTaskListCreateApiResponse(taskListRepository.save(createdList));
     }
 
+    public TaskListCreateApiResponse updateTaskList(Long taskListId, TaskListCreateApiRequest request) {
+        var listToUpdate = taskListRepository.findById(taskListId)
+                .orElseThrow(() -> new NotFoundException("Task list with id: " + taskListId + " not found"));
+
+        listToUpdate.setName(request.name());
+        return taskListConverter.toTaskListCreateApiResponse(taskListRepository.save(listToUpdate));
+    }
+
+    @Transactional
+    public void deleteTaskList(Long listId, boolean force) {
+        var orphanedTasks = taskRepository.findTasksToBeAbandoned(listId);
+
+        if (!force && !orphanedTasks.isEmpty()) {
+            throw new OrphanedTasksException("List: " + listId + " is the only list for tasks with ids: " + orphanedTasks.stream().map(Task::getId));
+        }
+
+        // force remove orphans
+        if (force && !orphanedTasks.isEmpty()) {
+            taskRepository.deleteAllInBatch(orphanedTasks);
+        }
+
+        var listToDelete = taskListRepository.findByIdWithTasksAndLists(listId).orElseThrow(() -> new NotFoundException("Task list with id: " + listId + " not found"));
+
+        for (Task task : new HashSet<>(listToDelete.getTasks())) {
+            task.removeList(listToDelete);
+        }
+
+        taskListRepository.delete(listToDelete);
+    }
 }

@@ -13,8 +13,8 @@ import projects.todo.api.TaskUpdateApiRequest;
 import projects.todo.api.filter.TaskFilter;
 import projects.todo.api.sorting.TaskSortParams;
 import projects.todo.converter.TaskConverter;
-import projects.todo.exception.InvalidDataException;
 import projects.todo.exception.NotFoundException;
+import projects.todo.exception.OrphanedTasksException;
 import projects.todo.persistance.*;
 
 import java.util.HashSet;
@@ -120,7 +120,7 @@ public class TaskService {
 
     private void validateMinimumLists(Task task) {
         if (task.getLists().isEmpty()) {
-            throw new InvalidDataException("Task must belong to at least " + 1 + " lists");
+            throw new OrphanedTasksException("Task must belong to at least " + 1 + " lists");
         }
     }
 }
