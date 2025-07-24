@@ -18,6 +18,7 @@ import projects.todo.exception.OrphanedTasksException;
 import projects.todo.persistance.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -120,7 +121,9 @@ public class TaskService {
 
     private void validateMinimumLists(Task task) {
         if (task.getLists().isEmpty()) {
-            throw new OrphanedTasksException("Task must belong to at least " + 1 + " lists");
+            throw new OrphanedTasksException("Trying to create or update task that does not belong to any lsit.",
+                    List.of("Task must belong to at least " + 1 + " list")
+            );
         }
     }
 }

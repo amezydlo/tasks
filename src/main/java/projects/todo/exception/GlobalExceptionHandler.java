@@ -18,9 +18,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ApiError> handle() {
-//        var error = ApiErrorFactory.createInternalServerError("Something went wrong. Please try again later.");
-//        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ExceptionHandler(OrphanedTasksException.class)
+    public ResponseEntity<ApiError> handle(OrphanedTasksException ex) {
+        var error = ApiErrorFactory.createBadRequest(ex.getMessage(),
+                ex.getViolations(),
+                List.of("Please check your request.")
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handle() {
+        var error = ApiErrorFactory.createInternalServerError("Something went wrong.", List.of("Please try again later."));
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

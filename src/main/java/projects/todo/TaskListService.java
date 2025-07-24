@@ -49,7 +49,8 @@ public class TaskListService {
         var orphanedTasks = taskRepository.findTasksToBeAbandoned(listId);
 
         if (!force && !orphanedTasks.isEmpty()) {
-            throw new OrphanedTasksException("List: " + listId + " is the only list for tasks with ids: " + orphanedTasks.stream().map(Task::getId));
+            throw new OrphanedTasksException("Trying to remove not empty list.",
+                    List.of("List: " + listId + " is the only list for tasks with ids: " + orphanedTasks.stream().map(Task::getId).toList()));
         }
 
         // force remove orphans
