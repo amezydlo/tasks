@@ -1,10 +1,7 @@
 package projects.todo.persistance;
 
 import jakarta.annotation.Nonnull;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,6 +9,7 @@ import projects.todo.api.filter.TaskFilter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class TaskSpecification implements Specification<Task> {
@@ -19,7 +17,11 @@ public class TaskSpecification implements Specification<Task> {
     private final Specification<Task> delegate;
 
     public TaskSpecification(TaskFilter filter) {
-        this.delegate = builder().withTitle(filter.title()).withCompleted(filter.completed()).build();
+        this.delegate = builder()
+                .withTitle(filter.title())
+                .withCompleted(filter.completed())
+                .withListIds(filter.listIds())
+                .build();
     }
 
     public static Builder builder() {
@@ -49,6 +51,16 @@ public class TaskSpecification implements Specification<Task> {
                     specs.add((root, query, cb) -> cb.isFalse(root.get("completed")));
                 }
 
+            }
+            return this;
+        }
+
+        public Builder withListIds(Set<Long> ids) {
+            if (ids != null && !ids.isEmpty()) {
+                specs.add((root, query, cb) -> {
+                    Join<Task, TaskList> task_task_list = root.join("lists");
+                    return task_task_list.get("id").in(ids);
+                });
             }
             return this;
         }
